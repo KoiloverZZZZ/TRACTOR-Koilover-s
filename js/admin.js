@@ -137,7 +137,6 @@ function initializeModals() {
         await saveProduct();
     });
 
-    // Добавляем обработчик для кнопки загрузки изображения
     const uploadImageBtn = document.getElementById('upload-image-btn');
     if (uploadImageBtn) {
         uploadImageBtn.addEventListener('click', function() {
@@ -145,7 +144,6 @@ function initializeModals() {
         });
     }
 
-    // Обработчик выбора файла
     const fileInput = document.getElementById('product-image-file');
     if (fileInput) {
         fileInput.addEventListener('change', handleImageUpload);
@@ -169,13 +167,11 @@ async function handleImageUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
 
-    // Проверяем тип файла
     if (!file.type.match('image.*')) {
         alert('Пожалуйста, выберите файл изображения (JPEG, PNG, GIF)');
         return;
     }
 
-    // Проверяем размер файла (максимум 5MB)
     if (file.size > 5 * 1024 * 1024) {
         alert('Размер файла не должен превышать 5MB');
         return;
@@ -185,21 +181,17 @@ async function handleImageUpload(event) {
     const originalText = uploadImageBtn.innerHTML;
     
     try {
-        // Показываем индикатор загрузки
         uploadImageBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Загрузка...';
         uploadImageBtn.disabled = true;
 
         console.log('Начинаем загрузку файла:', file.name, file.size, file.type);
 
-        // Загружаем файл в облачное хранилище
         const imageUrl = await cloudStorage.uploadFile(file);
         
         console.log('Получен URL изображения:', imageUrl);
         
-        // Обновляем поле с URL изображения
         document.getElementById('product-image').value = imageUrl;
         
-        // Показываем превью изображения
         const previewContainer = document.getElementById('image-preview-container');
         if (previewContainer) {
             previewContainer.innerHTML = `
@@ -216,7 +208,6 @@ async function handleImageUpload(event) {
     } catch (error) {
         console.error('Ошибка загрузки изображения:', error);
         
-        // Пробуем альтернативный метод
         try {
             console.log('Пробуем альтернативный метод загрузки...');
             const alternativeUrl = await cloudStorage.uploadFileAlternative(file);
@@ -237,10 +228,8 @@ async function handleImageUpload(event) {
             alert('Ошибка загрузки изображения: ' + error.message + '\nПожалуйста, попробуйте другой файл или введите URL вручную.');
         }
     } finally {
-        // Восстанавливаем кнопку
         uploadImageBtn.innerHTML = originalText;
         uploadImageBtn.disabled = false;
-        // Сбрасываем input file
         event.target.value = '';
     }
 }
@@ -282,7 +271,6 @@ function openProductModal(productId = null) {
     
     form.reset();
     
-    // Очищаем превью
     const previewContainer = document.getElementById('image-preview-container');
     if (previewContainer) {
         previewContainer.innerHTML = '';
@@ -307,7 +295,6 @@ function openProductModal(productId = null) {
                 document.getElementById('product-weight').value = product.weight;
                 document.getElementById('product-manufacturer').value = product.manufacturer;
                 
-                // Показываем превью текущего изображения
                 if (previewContainer && product.image) {
                     previewContainer.innerHTML = `
                         <div class="image-preview">
@@ -390,7 +377,6 @@ async function saveProduct() {
     const weight = document.getElementById('product-weight').value;
     const manufacturer = document.getElementById('product-manufacturer').value;
 
-    // ВАЖНО: Проверяем, что поле image не пустое
     if (!name || !description || !price || !image) {
         alert('Пожалуйста, заполните все обязательные поля, включая изображение');
         return;
@@ -401,7 +387,6 @@ async function saveProduct() {
         return;
     }
 
-    // Проверяем, что image содержит валидный URL
     if (!image.startsWith('http') && !image.startsWith('data:')) {
         alert('Пожалуйста, загрузите изображение или введите корректный URL');
         return;
@@ -493,7 +478,6 @@ window.deleteProductHandler = async function(productId) {
     }
 };
 
-// Временно добавьте эту функцию для тестирования
 window.testUpload = async function() {
     const testFile = new File(['test'], 'test.png', { type: 'image/png' });
     try {
