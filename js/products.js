@@ -83,7 +83,6 @@ export async function addProduct(productData) {
     products.push(newProduct);
     await saveProducts(products);
     
-    // Обновляем каталог на главной странице, если она открыта
     await updateCatalogIfOpen();
     
     return { success: true, product: newProduct };
@@ -99,7 +98,6 @@ export async function updateProduct(productId, productData) {
     products[productIndex] = { ...products[productIndex], ...productData };
     await saveProducts(products);
     
-    // Обновляем каталог на главной странице, если она открыта
     await updateCatalogIfOpen();
     
     return { success: true, product: products[productIndex] };
@@ -120,7 +118,6 @@ export async function deleteProduct(productId) {
     return { success: true };
 }
 
-// Функция для обновления каталога на главной странице
 export async function updateCatalogIfOpen() {
     if (window.location.pathname.includes('index.html') || 
         window.location.pathname === '/' || 

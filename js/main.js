@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         await renderProductList(catalogContainer);
     }
 
-    // Обработка страницы входа
     const loginForm = document.querySelector('.login-form');
     if (loginForm && window.location.pathname.includes('login.html')) {
         loginForm.addEventListener('submit', async function(e) {
@@ -45,7 +44,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
     }
 
-    // Обработка страницы регистрации
     const registerForm = document.querySelector('.login-form');
     if (registerForm && window.location.pathname.includes('register.html')) {
         registerForm.addEventListener('submit', async function(e) {
@@ -98,7 +96,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             if (product && productContainer) {
                 productContainer.innerHTML = renderProductDetails(product);
                 
-                // Добавляем обработчик для кнопки покупки
                 const buyButton = productContainer.querySelector('.buy-button');
                 if (buyButton) {
                     buyButton.addEventListener('click', function() {

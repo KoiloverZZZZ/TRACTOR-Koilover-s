@@ -41,7 +41,6 @@ export async function getProducts() {
 
 export async function saveProducts(products) {
     try {
-        // Сохраняем в localStorage
         localStorage.setItem('products', JSON.stringify(products));
         console.log('Товары сохранены в localStorage:', products);
         return true;
@@ -51,17 +50,14 @@ export async function saveProducts(products) {
     }
 }
 
-// Инициализация пользователей в localStorage при первой загрузке
 export async function initializeUsers() {
     if (!localStorage.getItem('users')) {
         try {
-            // Загружаем начальных пользователей из JSON
             const users = await getUsers();
             if (users && users.length > 0) {
                 localStorage.setItem('users', JSON.stringify(users));
                 console.log('Пользователи инициализированы в localStorage из JSON');
             } else {
-                // Создаем базовых пользователей если JSON пуст
                 const defaultUsers = [
                     {
                         "id": 1,
@@ -83,7 +79,6 @@ export async function initializeUsers() {
             }
         } catch (error) {
             console.error('Ошибка инициализации пользователей:', error);
-            // Создаем базовых пользователей при ошибке
             const defaultUsers = [
                 {
                     "id": 1,
@@ -108,11 +103,9 @@ export async function initializeUsers() {
     }
 }
 
-// Инициализация товаров в localStorage при первой загрузке
 export async function initializeProducts() {
     if (!localStorage.getItem('products')) {
         try {
-            // Загружаем начальные товары из JSON
             const products = await getProducts();
             if (products && products.length > 0) {
                 localStorage.setItem('products', JSON.stringify(products));

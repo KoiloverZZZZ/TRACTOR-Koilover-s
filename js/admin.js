@@ -7,7 +7,6 @@ initializeUsers();
 initializeProducts();
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Проверка прав администратора
     if (!isAdmin()) {
         alert('Доступ запрещен. Требуются права администратора.');
         window.location.href = 'index.html';
@@ -316,7 +315,6 @@ async function saveProduct() {
             document.getElementById('product-modal').style.display = 'none';
             await loadProductsTable();
             
-            // Принудительно обновляем каталог на главной странице
             const { updateCatalogIfOpen } = await import('./products.js');
             await updateCatalogIfOpen();
             
@@ -362,7 +360,6 @@ window.deleteProductHandler = async function(productId) {
             if (result.success) {
                 await loadProductsTable();
                 
-                // Принудительно обновляем каталог на главной странице
                 const { updateCatalogIfOpen } = await import('./products.js');
                 await updateCatalogIfOpen();
                 
