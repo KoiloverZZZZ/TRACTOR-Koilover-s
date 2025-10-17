@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Каталог автомобильных дисков</title>
+    <title>TRACTOR | Регистрация</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -13,13 +13,11 @@
             <a href="index.html" class="logo-link">
                 <i class="fas fa-car logo"></i>
             </a>
-            <h1 class="header-title">TRACTOR | Автомобильные диски | Каталог дисков</h1>
+            <h1 class="header-title">TRACTOR | Регистрация</h1>
         </div>
         <div class="header-actions">
-            <span id="user-info" class="user-info"></span>
-            <a href="login.html" id="auth-link">Авторизация</a>
-            <a href="admin.html" id="admin-link" style="display: none;">Админка</a>
-            <a href="#" id="logout-link" style="display: none;">Выйти</a>
+            <a href="login.html">Войти</a>
+            <a href="index.html">На главную</a>
         </div>
     </header>
 
@@ -29,9 +27,16 @@
         </video>
     </div>
 
-    <div class="catalog">
-        <div class="ob">
-        </div>
+    <div class="xxx">
+        <form class="login-form">
+            <h1>Регистрация</h1>
+            <input type="text" placeholder="Имя" required>
+            <input type="text" placeholder="Логин" required>
+            <input type="password" placeholder="Пароль" required>
+            <input type="submit" value="Зарегистрироваться" class="button">
+            <div class="txr">Уже есть аккаунт?</div>
+            <a href="login.html">Войти</a>
+        </form>
     </div>
 
     <footer>
@@ -42,7 +47,6 @@
             <h2>Серебреннков Михаил | практическая работа номер 3 | "Магазин автомобильных дисков"</h2>
         </nav>
     </footer>
-
     <script type="module" src="js/main.js"></script>
 </body>
 </html>

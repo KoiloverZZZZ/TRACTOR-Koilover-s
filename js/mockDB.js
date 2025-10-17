@@ -1,127 +1,161 @@
-export const users = [
-  { id: 1, login: 'admin', password: '123456', name: 'Админ' },
-  { id: 2, login: 'user', password: 'password', name: 'Пользователь'}
-];
+// Функции для работы с пользователями
+export async function getUsers() {
+    try {
+        const response = await fetch('./data/users.json');
+        if (!response.ok) {
+            throw new Error(`Ошибка HTTP: ${response.status}`);
+        }
+        const users = await response.json();
+        console.log('Загружены пользователи из JSON:', users);
+        return users;
+    } catch (error) {
+        console.error('Ошибка загрузки пользователей из JSON:', error);
+        // Возвращаем данные из localStorage как fallback
+        return getLocalUsers();
+    }
+}
 
-export const products = [
-  { 
-    id: 1, 
-    name: 'Weds Kranze', 
-    description: 'Премиальные литые диски Weds Kranze сочетают в себе японское качество и современный дизайн.', 
-    price: 5000, 
-    image: 'https://irepaotouogkzobmwuno.supabase.co/storage/v1/object/public/koilover/wheel1.png',
-    material: 'Алюминиевый сплав',
-    diameter: '18"',
-    width: '8.5J',
-    offset: 'ET35',
-    pcd: '5x114.3',
-    color: 'Серебристый',
-    weight: '9.2 кг',
-    manufacturer: 'Weds Japan'
-  },
-  { 
-    id: 2, 
-    name: 'Enkei RPF1', 
-    description: 'Легендарные легкие кованые диски для гонок и тюнинга. Иконка автоспорта.', 
-    price: 15000, 
-    image: 'https://irepaotouogkzobmwuno.supabase.co/storage/v1/object/public/koilover/wheel2.png',
-    material: 'Кованый алюминий',
-    diameter: '17"',
-    width: '9J',
-    offset: 'ET22',
-    pcd: '5x114.3',
-    color: 'Серебристый матовый',
-    weight: '7.1 кг',
-    manufacturer: 'Enkei Japan'
-  },
-  { 
-    id: 3, 
-    name: 'Emotion ZR7', 
-    description: 'Литые диски с агрессивным современным дизайном, часто в стиле "гребного винта".', 
-    price: 2500, 
-    image: 'https://irepaotouogkzobmwuno.supabase.co/storage/v1/object/public/koilover/wheel3.png',
-    material: 'Алюминиевый сплав',
-    diameter: '19"',
-    width: '9.5J',
-    offset: 'ET30',
-    pcd: '5x112',
-    color: 'Черный матовый',
-    weight: '11.5 кг',
-    manufacturer: 'Emotion Wheels'
-  },
-  { 
-    id: 4, 
-    name: 'BBS RI-D', 
-    description: 'Элитные ультралегкие кованые диски от BBS. Технология и цена высшего уровня.', 
-    price: 8000, 
-    image: 'https://irepaotouogkzobmwuno.supabase.co/storage/v1/object/public/koilover/wheel4.png',
-    material: 'Кованый алюминий',
-    diameter: '20"',
-    width: '10J',
-    offset: 'ET25',
-    pcd: '5x120',
-    color: 'Бронзовый',
-    weight: '8.8 кг',
-    manufacturer: 'BBS Germany'
-  },
-  { 
-    id: 5, 
-    name: 'Advance Racing RG-2', 
-    description: 'Японские литые диски в стиле "гребного винта", популярны в дрифте и стрит-культуре.', 
-    price: 20000, 
-    image: 'https://irepaotouogkzobmwuno.supabase.co/storage/v1/object/public/koilover/wheel5.png',
-    material: 'Алюминиевый сплав',
-    diameter: '18"',
-    width: '9J',
-    offset: 'ET15',
-    pcd: '5x114.3',
-    color: 'Белый',
-    weight: '10.3 кг',
-    manufacturer: 'Advance Japan'
-  },
-  { 
-    id: 6, 
-    name: 'BRIXTON FF10', 
-    description: 'Бюджетные литые диски с дизайном, напоминающим популярные модели (как RAYS TE37).', 
-    price: 3500, 
-    image: 'https://irepaotouogkzobmwuno.supabase.co/storage/v1/object/public/koilover/wheel6.png',
-    material: 'Алюминиевый сплав',
-    diameter: '17"',
-    width: '8J',
-    offset: 'ET35',
-    pcd: '5x100',
-    color: 'Серый матовый',
-    weight: '8.9 кг',
-    manufacturer: 'Brixton Wheels'
-  },
-  { 
-    id: 7, 
-    name: 'HRE P101', 
-    description: 'Роскошные полностью кованые 3-х компонентные диски. Эксклюзивный дизайн и высочайшее качество.', 
-    price: 5000, 
-    image: 'https://irepaotouogkzobmwuno.supabase.co/storage/v1/object/public/koilover/wheel7.png',
-    material: 'Кованый алюминий',
-    diameter: '21"',
-    width: '10.5J',
-    offset: 'ET20',
-    pcd: '5x112',
-    color: 'Темно-серый',
-    weight: '12.1 кг',
-    manufacturer: 'HRE USA'
-  },
-  { 
-    id: 8, 
-    name: 'BBS LM', 
-    description: 'Классические 2-х компонентные литые диски с полнопроходными спицами. Икона стиля для многих автомобилей.', 
-    price: 5000, 
-    image: 'https://irepaotouogkzobmwuno.supabase.co/storage/v1/object/public/koilover/wheel8.png',
-    material: 'Алюминиевый сплав',
-    diameter: '19"',
-    width: '9J',
-    offset: 'ET40',
-    pcd: '5x112',
-    color: 'Золотой',
-    weight: '11.2 кг',
-    manufacturer: 'BBS Germany'
-  }
-];
+export async function saveUsers(users) {
+    try {
+        // Сохраняем в localStorage
+        localStorage.setItem('users', JSON.stringify(users));
+        console.log('Пользователи сохранены в localStorage:', users);
+        return true;
+    } catch (error) {
+        console.error('Ошибка сохранения пользователей:', error);
+        return false;
+    }
+}
+
+// Функции для работы с товарами
+export async function getProducts() {
+    try {
+        const response = await fetch('./data/products.json');
+        if (!response.ok) {
+            throw new Error(`Ошибка HTTP: ${response.status}`);
+        }
+        const products = await response.json();
+        console.log('Загружены товары из JSON:', products);
+        return products;
+    } catch (error) {
+        console.error('Ошибка загрузки товаров из JSON:', error);
+        // Возвращаем данные из localStorage как fallback
+        return getLocalProducts();
+    }
+}
+
+export async function saveProducts(products) {
+    try {
+        // Сохраняем в localStorage
+        localStorage.setItem('products', JSON.stringify(products));
+        console.log('Товары сохранены в localStorage:', products);
+        return true;
+    } catch (error) {
+        console.error('Ошибка сохранения товаров:', error);
+        return false;
+    }
+}
+
+// Инициализация пользователей в localStorage при первой загрузке
+export async function initializeUsers() {
+    if (!localStorage.getItem('users')) {
+        try {
+            // Загружаем начальных пользователей из JSON
+            const users = await getUsers();
+            if (users && users.length > 0) {
+                localStorage.setItem('users', JSON.stringify(users));
+                console.log('Пользователи инициализированы в localStorage из JSON');
+            } else {
+                // Создаем базовых пользователей если JSON пуст
+                const defaultUsers = [
+                    {
+                        "id": 1,
+                        "login": "admin",
+                        "password": "123456",
+                        "name": "Админ",
+                        "role": "admin"
+                    },
+                    {
+                        "id": 2,
+                        "login": "user",
+                        "password": "password",
+                        "name": "Пользователь",
+                        "role": "user"
+                    }
+                ];
+                localStorage.setItem('users', JSON.stringify(defaultUsers));
+                console.log('Созданы пользователи по умолчанию');
+            }
+        } catch (error) {
+            console.error('Ошибка инициализации пользователей:', error);
+            // Создаем базовых пользователей при ошибке
+            const defaultUsers = [
+                {
+                    "id": 1,
+                    "login": "admin",
+                    "password": "123456",
+                    "name": "Админ",
+                    "role": "admin"
+                },
+                {
+                    "id": 2,
+                    "login": "user",
+                    "password": "password",
+                    "name": "Пользователь",
+                    "role": "user"
+                }
+            ];
+            localStorage.setItem('users', JSON.stringify(defaultUsers));
+            console.log('Созданы пользователи по умолчанию из-за ошибки');
+        }
+    } else {
+        console.log('Пользователи уже инициализированы в localStorage');
+    }
+}
+
+// Инициализация товаров в localStorage при первой загрузке
+export async function initializeProducts() {
+    if (!localStorage.getItem('products')) {
+        try {
+            // Загружаем начальные товары из JSON
+            const products = await getProducts();
+            if (products && products.length > 0) {
+                localStorage.setItem('products', JSON.stringify(products));
+                console.log('Товары инициализированы в localStorage из JSON');
+            }
+        } catch (error) {
+            console.error('Ошибка инициализации товаров:', error);
+        }
+    } else {
+        console.log('Товары уже инициализированы в localStorage');
+    }
+}
+
+// Функции для работы с локальными данными (из localStorage)
+export function getLocalUsers() {
+    try {
+        const users = localStorage.getItem('users');
+        const parsedUsers = users ? JSON.parse(users) : [];
+        console.log('Получены пользователи из localStorage:', parsedUsers);
+        return parsedUsers;
+    } catch (error) {
+        console.error('Ошибка получения пользователей из localStorage:', error);
+        return [];
+    }
+}
+
+export function getLocalProducts() {
+    try {
+        const products = localStorage.getItem('products');
+        return products ? JSON.parse(products) : [];
+    } catch (error) {
+        console.error('Ошибка получения товаров из localStorage:', error);
+        return [];
+    }
+}
+
+// Функция для принудительного обновления данных в localStorage
+export function forceRefreshProducts() {
+    localStorage.removeItem('products');
+    console.log('Данные о товарах принудительно обновлены');
+}
