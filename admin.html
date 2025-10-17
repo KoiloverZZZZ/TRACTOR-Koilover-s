@@ -107,7 +107,21 @@
                 <input type="text" id="product-name" placeholder="Название" required>
                 <textarea id="product-description" placeholder="Описание" required></textarea>
                 <input type="number" id="product-price" placeholder="Цена" required>
-                <input type="text" id="product-image" placeholder="URL изображения" required>
+                
+                <!-- Секция загрузки изображения -->
+                <div class="image-upload-section">
+                    <label>Изображение товара:</label>
+                    <div class="upload-controls">
+                        <input type="text" id="product-image" placeholder="URL изображения или загрузите файл" required>
+                        <button type="button" id="upload-image-btn" class="button">
+                            <i class="fas fa-upload"></i> Выбрать файл
+                        </button>
+                        <input type="file" id="product-image-file" accept="image/*" style="display: none;">
+                    </div>
+                    <div id="image-preview-container"></div>
+                    <small>Поддерживаются форматы: JPEG, PNG, GIF. Максимальный размер: 5MB</small>
+                </div>
+                
                 <input type="text" id="product-material" placeholder="Материал" required>
                 <input type="text" id="product-diameter" placeholder="Диаметр" required>
                 <input type="text" id="product-width" placeholder="Ширина" required>
@@ -116,7 +130,7 @@
                 <input type="text" id="product-color" placeholder="Цвет" required>
                 <input type="text" id="product-weight" placeholder="Вес" required>
                 <input type="text" id="product-manufacturer" placeholder="Производитель" required>
-                <button type="submit" class="button">Сохранить</button>
+                <button type="submit" class="button">Сохранить товар</button>
             </form>
         </div>
     </div>

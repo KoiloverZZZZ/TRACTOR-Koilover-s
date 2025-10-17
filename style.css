@@ -114,6 +114,7 @@ input, select, textarea {
     width: 100%;
     border: 1px solid #ccc;
     border-radius: 4px;
+    font-size: 14px;
 }
 
 .button {
@@ -339,31 +340,38 @@ h2 {
     padding: 20px;
     position: relative;
     z-index: 1;
-    background-color: rgba(167, 169, 190, 0.9);
+    background-color: rgba(167, 169, 190, 0.95);
     margin: 20px;
     border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    min-height: 600px;
 }
 
 .admin-tabs {
     display: flex;
     margin-bottom: 20px;
     border-bottom: 2px solid #0f0e17;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px 8px 0 0;
+    overflow: hidden;
 }
 
 .tab-button {
-    padding: 10px 20px;
+    padding: 12px 24px;
     background: none;
     border: none;
     cursor: pointer;
     font-size: 1rem;
     color: #0f0e17;
-    border-bottom: 2px solid transparent;
+    border-bottom: 3px solid transparent;
     transition: all 0.3s ease;
+    font-weight: 500;
 }
 
 .tab-button.active {
-    border-bottom: 2px solid #0f0e17;
+    border-bottom: 3px solid #0f0e17;
     font-weight: bold;
+    background-color: rgba(15, 14, 23, 0.1);
 }
 
 .tab-button:hover {
@@ -372,10 +380,16 @@ h2 {
 
 .tab-content {
     display: none;
+    animation: fadeIn 0.3s ease;
 }
 
 .tab-content.active {
     display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .admin-header {
@@ -383,24 +397,37 @@ h2 {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(15, 14, 23, 0.2);
+}
+
+.admin-header h2 {
+    color: #0f0e17;
+    font-size: 1.5rem;
+    margin: 0;
 }
 
 .add-button {
     background-color: #0f0e17;
     color: white;
     border: none;
-    padding: 10px 15px;
+    padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+    font-weight: bold;
 }
 
 .add-button:hover {
     background-color: #2a273f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
 .admin-table-container {
     overflow-x: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .admin-table {
@@ -409,6 +436,7 @@ h2 {
     background-color: white;
     border-radius: 8px;
     overflow: hidden;
+    min-width: 800px;
 }
 
 .admin-table th,
@@ -422,24 +450,33 @@ h2 {
     background-color: #0f0e17;
     color: white;
     font-weight: bold;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.admin-table tr {
+    transition: background-color 0.2s ease;
 }
 
 .admin-table tr:hover {
-    background-color: #f5f5f5;
+    background-color: #f8f9fa;
 }
 
 .admin-actions {
     display: flex;
-    gap: 10px;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
 .edit-btn, .delete-btn {
-    padding: 5px 10px;
+    padding: 6px 12px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 0.9rem;
-    transition: background-color 0.3s ease;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+    font-weight: 500;
 }
 
 .edit-btn {
@@ -449,6 +486,7 @@ h2 {
 
 .edit-btn:hover {
     background-color: #45a049;
+    transform: translateY(-1px);
 }
 
 .delete-btn {
@@ -458,6 +496,7 @@ h2 {
 
 .delete-btn:hover {
     background-color: #da190b;
+    transform: translateY(-1px);
 }
 
 .modal {
@@ -468,28 +507,371 @@ h2 {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0,0,0,0.7);
+    backdrop-filter: blur(2px);
 }
 
 .modal-content {
     background-color: #a7a9be;
     margin: 5% auto;
-    padding: 20px;
-    border-radius: 10px;
+    padding: 25px;
+    border-radius: 12px;
     width: 500px;
     max-width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
     position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .close {
     position: absolute;
-    right: 15px;
-    top: 10px;
-    font-size: 24px;
+    right: 20px;
+    top: 15px;
+    font-size: 28px;
     cursor: pointer;
+    color: #0f0e17;
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: #f44336;
 }
 
 #product-form textarea {
     height: 100px;
     resize: vertical;
+    min-height: 80px;
+}
+
+/* Стили для загрузки изображений */
+.image-upload-section {
+    margin: 15px 0;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    border: 1px dashed rgba(15, 14, 23, 0.3);
+}
+
+.image-upload-section label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #0f0e17;
+    font-size: 0.95rem;
+}
+
+.image-upload-section .upload-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin: 10px 0;
+    flex-wrap: wrap;
+}
+
+.image-upload-section .upload-controls input[type="text"] {
+    flex: 1;
+    min-width: 200px;
+}
+
+#upload-image-btn {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+#upload-image-btn:hover {
+    background-color: #1976D2;
+    transform: translateY(-1px);
+}
+
+#upload-image-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+#product-image-file {
+    display: none;
+}
+
+.image-preview {
+    text-align: center;
+    padding: 15px;
+    border: 2px dashed #0f0e17;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.1);
+    margin: 10px 0;
+}
+
+.image-preview img {
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    max-width: 100%;
+    height: auto;
+}
+
+.image-preview p {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #0f0e17;
+    font-weight: 500;
+}
+
+.image-upload-section small {
+    color: #666;
+    font-size: 0.8rem;
+    display: block;
+    margin-top: 5px;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+    .admin-container {
+        margin: 10px;
+        padding: 15px;
+    }
+    
+    .admin-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+    
+    .admin-tabs {
+        flex-direction: column;
+    }
+    
+    .tab-button {
+        text-align: left;
+        border-bottom: 1px solid rgba(15, 14, 23, 0.2);
+        border-left: 3px solid transparent;
+    }
+    
+    .tab-button.active {
+        border-left: 3px solid #0f0e17;
+        border-bottom: 1px solid rgba(15, 14, 23, 0.2);
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 10% auto;
+        padding: 20px;
+    }
+    
+    .image-upload-section .upload-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    #upload-image-btn {
+        justify-content: center;
+    }
+    
+    .admin-actions {
+        flex-direction: column;
+    }
+    
+    .edit-btn, .delete-btn {
+        text-align: center;
+    }
+}
+
+/* Стили для состояний загрузки */
+.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #0f0e17;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Стили для пустых состояний таблиц */
+.admin-table tbody tr td[colspan] {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+    font-style: italic;
+}
+
+/* Стили для успешных операций */
+.success-message {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 10px 0;
+    text-align: center;
+}
+
+/* Стили для ошибок */
+.error-message {
+    background-color: #f44336;
+    color: white;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 10px 0;
+    text-align: center;
+}
+
+/* Добавьте эти стили в существующий файл style.css */
+
+.image-upload-section {
+    margin: 15px 0;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    border: 1px dashed rgba(15, 14, 23, 0.3);
+}
+
+.image-upload-section label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #0f0e17;
+    font-size: 0.95rem;
+}
+
+.image-upload-section .upload-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin: 10px 0;
+    flex-wrap: wrap;
+}
+
+.image-upload-section .upload-controls input[type="text"] {
+    flex: 1;
+    min-width: 200px;
+}
+
+#upload-image-btn {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+#upload-image-btn:hover {
+    background-color: #1976D2;
+    transform: translateY(-1px);
+}
+
+#upload-image-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+#product-image-file {
+    display: none;
+}
+
+.image-preview {
+    text-align: center;
+    padding: 15px;
+    border: 2px dashed #0f0e17;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.1);
+    margin: 10px 0;
+}
+
+.image-preview img {
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    max-width: 100%;
+    height: auto;
+}
+
+.image-preview p {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #0f0e17;
+    font-weight: 500;
+}
+
+.image-upload-section small {
+    color: #666;
+    font-size: 0.8rem;
+    display: block;
+    margin-top: 5px;
+}
+
+/* Стили для состояний загрузки */
+.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #0f0e17;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.fa-spinner.fa-spin {
+    animation: fa-spin 1s infinite linear;
+}
+
+@keyframes fa-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
