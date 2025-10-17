@@ -2,7 +2,6 @@ import { renderProductList } from './products.js';
 import { loginUser, registerUser, logoutUser, getCurrentUser, isAdmin } from './auth.js';
 import { validateForm } from './validation.js';
 
-// Инициализируем базу данных при загрузке
 import { initializeUsers, initializeProducts } from './mockDB.js';
 initializeUsers();
 initializeProducts();
@@ -11,7 +10,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     const currentUser = getCurrentUser();
     updateHeader(currentUser);
 
-    // Обработка главной страницы
     const catalogContainer = document.querySelector('.ob');
     if (catalogContainer) {
         await renderProductList(catalogContainer);
@@ -42,7 +40,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             } else {
                 alert(result.error);
                 console.log('Ошибка входа. Проверьте логин и пароль.');
-                // Очищаем поля при ошибке
                 passwordInput.value = '';
             }
         });
@@ -75,14 +72,12 @@ document.addEventListener('DOMContentLoaded', async function() {
                 window.location.href = 'login.html';
             } else {
                 alert(result.error);
-                // Очищаем поля при ошибке
                 loginInput.value = '';
                 passwordInput.value = '';
             }
         });
     }
 
-    // Обработка выхода
     const logoutLink = document.getElementById('logout-link');
     if (logoutLink) {
         logoutLink.addEventListener('click', function(e) {
@@ -92,7 +87,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
     }
 
-    // Обработка страницы продукта
     if (window.location.pathname.includes('products.html')) {
         const urlParams = new URLSearchParams(window.location.search);
         const productId = urlParams.get('id');
@@ -119,7 +113,6 @@ document.addEventListener('DOMContentLoaded', async function() {
 // Обработчик для обновления каталога при возвращении на главную
 window.addEventListener('pageshow', function(event) {
     if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
-        // Страница загружена из кэша (назад/вперед в браузере)
         const catalogContainer = document.querySelector('.ob');
         if (catalogContainer && (window.location.pathname.includes('index.html') || 
             window.location.pathname === '/' || 

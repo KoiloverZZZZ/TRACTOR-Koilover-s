@@ -2,14 +2,12 @@ import { getProducts, saveProducts, getLocalProducts } from "./mockDB.js"
 
 export async function loadProducts() {
     try {
-        // Сначала пробуем получить актуальные данные из localStorage
         const localProducts = getLocalProducts();
         if (localProducts && localProducts.length > 0) {
             console.log('Загружены товары из localStorage:', localProducts.length);
             return localProducts;
         }
         
-        // Если в localStorage нет данных, загружаем из JSON
         const jsonProducts = await getProducts();
         console.log('Загружены товары из JSON:', jsonProducts.length);
         return jsonProducts;
@@ -117,7 +115,6 @@ export async function deleteProduct(productId) {
     products.splice(productIndex, 1);
     await saveProducts(products);
     
-    // Обновляем каталог на главной странице, если она открыта
     await updateCatalogIfOpen();
     
     return { success: true };
@@ -125,7 +122,6 @@ export async function deleteProduct(productId) {
 
 // Функция для обновления каталога на главной странице
 export async function updateCatalogIfOpen() {
-    // Проверяем, открыта ли главная страница
     if (window.location.pathname.includes('index.html') || 
         window.location.pathname === '/' || 
         window.location.pathname.endsWith('/') ||

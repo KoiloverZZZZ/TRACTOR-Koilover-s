@@ -2,7 +2,6 @@ import { getAllUsers, addUser, updateUser, deleteUser, isAdmin, logoutUser } fro
 import { loadProducts, addProduct, updateProduct, deleteProduct } from './products.js';
 import { validateForm } from './validation.js';
 
-// Инициализируем базу данных при загрузке
 import { initializeUsers, initializeProducts } from './mockDB.js';
 initializeUsers();
 initializeProducts();
@@ -19,7 +18,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeAdminPanel() {
-    // Инициализация вкладок
     const tabButtons = document.querySelectorAll('.tab-button');
     const tabContents = document.querySelectorAll('.tab-content');
 
@@ -27,14 +25,12 @@ function initializeAdminPanel() {
         button.addEventListener('click', () => {
             const tabId = button.dataset.tab;
             
-            // Обновляем активные вкладки
             tabButtons.forEach(btn => btn.classList.remove('active'));
             tabContents.forEach(content => content.classList.remove('active'));
             
             button.classList.add('active');
             document.getElementById(`${tabId}-tab`).classList.add('active');
             
-            // Перезагружаем данные для активной вкладки
             if (tabId === 'users') {
                 loadUsersTable();
             } else if (tabId === 'products') {
@@ -43,14 +39,11 @@ function initializeAdminPanel() {
         });
     });
 
-    // Загрузка начальных данных
     loadUsersTable();
     loadProductsTable();
 
-    // Обработчики для модальных окон
     initializeModals();
 
-    // Обработчик выхода
     document.getElementById('admin-logout').addEventListener('click', function(e) {
         e.preventDefault();
         logoutUser();
@@ -118,7 +111,6 @@ async function loadProductsTable() {
 }
 
 function initializeModals() {
-    // Модальное окно пользователей
     const userModal = document.getElementById('user-modal');
     const addUserBtn = document.getElementById('add-user-btn');
     const userForm = document.getElementById('user-form');
@@ -132,7 +124,6 @@ function initializeModals() {
         await saveUser();
     });
 
-    // Модальное окно товаров
     const productModal = document.getElementById('product-modal');
     const addProductBtn = document.getElementById('add-product-btn');
     const productForm = document.getElementById('product-form');
@@ -146,14 +137,12 @@ function initializeModals() {
         await saveProduct();
     });
 
-    // Закрытие модальных окон
     document.querySelectorAll('.close').forEach(closeBtn => {
         closeBtn.addEventListener('click', function() {
             this.closest('.modal').style.display = 'none';
         });
     });
 
-    // Закрытие по клику вне модального окна
     window.addEventListener('click', function(e) {
         if (e.target.classList.contains('modal')) {
             e.target.style.display = 'none';
@@ -169,7 +158,6 @@ function openUserModal(userId = null) {
     form.reset();
     
     if (userId) {
-        // Загружаем данные пользователя асинхронно
         getAllUsers().then(users => {
             const user = users.find(u => u.id === userId);
             if (user) {
@@ -200,7 +188,6 @@ function openProductModal(productId = null) {
     form.reset();
     
     if (productId) {
-        // Загружаем данные товара асинхронно
         loadProducts().then(products => {
             const product = products.find(p => p.id === productId);
             if (product) {
@@ -235,7 +222,6 @@ async function saveUser() {
     const password = document.getElementById('user-password').value;
     const role = document.getElementById('user-role').value;
 
-    // Базовая валидация
     if (!name || !login || !role) {
         alert('Пожалуйста, заполните все обязательные поля');
         return;
@@ -344,7 +330,6 @@ async function saveProduct() {
     }
 }
 
-// Глобальные функции для обработчиков событий в таблице
 window.editUser = function(userId) {
     openUserModal(userId);
 };

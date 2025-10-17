@@ -1,7 +1,6 @@
 import { getUsers, saveUsers, getLocalUsers } from "./mockDB.js"
 
 export async function loginUser(login, password) {
-    // Используем пользователей из localStorage, а не из JSON
     const users = getLocalUsers();
     console.log('Поиск пользователя:', login);
     console.log('Все пользователи в localStorage:', users);
@@ -15,12 +14,10 @@ export async function loginUser(login, password) {
 }
 
 export async function registerUser(login, password, name) {
-    // Используем пользователей из localStorage
     const users = getLocalUsers();
     console.log('Регистрация пользователя:', login);
     console.log('Текущие пользователи:', users);
     
-    // Проверяем, существует ли пользователь с таким логином
     if (users.find(u => u.login === login)) {
         return { success: false, error: 'Пользователь с таким логином уже существует' };
     }
@@ -102,7 +99,6 @@ export async function deleteUser(userId) {
         return { success: false, error: 'Пользователь не найден' };
     }
     
-    // Не позволяем удалить самого себя
     const currentUser = getCurrentUser();
     if (currentUser && currentUser.id === parseInt(userId)) {
         return { success: false, error: 'Нельзя удалить самого себя' };

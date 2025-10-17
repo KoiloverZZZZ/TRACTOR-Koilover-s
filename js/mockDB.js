@@ -1,4 +1,3 @@
-// Функции для работы с пользователями
 export async function getUsers() {
     try {
         const response = await fetch('./data/users.json');
@@ -10,14 +9,12 @@ export async function getUsers() {
         return users;
     } catch (error) {
         console.error('Ошибка загрузки пользователей из JSON:', error);
-        // Возвращаем данные из localStorage как fallback
         return getLocalUsers();
     }
 }
 
 export async function saveUsers(users) {
     try {
-        // Сохраняем в localStorage
         localStorage.setItem('users', JSON.stringify(users));
         console.log('Пользователи сохранены в localStorage:', users);
         return true;
@@ -27,7 +24,6 @@ export async function saveUsers(users) {
     }
 }
 
-// Функции для работы с товарами
 export async function getProducts() {
     try {
         const response = await fetch('./data/products.json');
@@ -39,7 +35,6 @@ export async function getProducts() {
         return products;
     } catch (error) {
         console.error('Ошибка загрузки товаров из JSON:', error);
-        // Возвращаем данные из localStorage как fallback
         return getLocalProducts();
     }
 }
@@ -131,7 +126,6 @@ export async function initializeProducts() {
     }
 }
 
-// Функции для работы с локальными данными (из localStorage)
 export function getLocalUsers() {
     try {
         const users = localStorage.getItem('users');
@@ -154,7 +148,6 @@ export function getLocalProducts() {
     }
 }
 
-// Функция для принудительного обновления данных в localStorage
 export function forceRefreshProducts() {
     localStorage.removeItem('products');
     console.log('Данные о товарах принудительно обновлены');
