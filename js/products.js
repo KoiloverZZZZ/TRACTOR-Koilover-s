@@ -1,19 +1,13 @@
-import { getProducts, saveProducts, getLocalProducts } from "./mockDB.js"
+const API_BASE = 'http://localhost:3000/api';
 
 export async function loadProducts() {
     try {
-        const localProducts = getLocalProducts();
-        if (localProducts && localProducts.length > 0) {
-            console.log('Загружены товары из localStorage:', localProducts.length);
-            return localProducts;
-        }
-        
-        const jsonProducts = await getProducts();
-        console.log('Загружены товары из JSON:', jsonProducts.length);
-        return jsonProducts;
+        const response = await fetch(`${API_BASE}/products`);
+        if (!response.ok) throw new Error('Network error');
+        return await response.json();
     } catch (error) {
-        console.error('Ошибка загрузки товаров:', error);
-        return [];
+        console.error('Load products error:', error);
+        throw new Error('Ошибка загрузки товаров');
     }
 }
 
@@ -30,15 +24,20 @@ export function renderProductCard(product) {
 }
 
 export async function renderProductList(container) {
-    const products = await loadProducts();
-    container.innerHTML = products.map(renderProductCard).join('');
-    // Добавляем обработчики кликов
-    container.querySelectorAll('.f').forEach(card => {
-        card.addEventListener('click', () => {
-            const productId = card.dataset.id;
-            window.location.href = `products.html?id=${productId}`;
+    try {
+        const products = await loadProducts();
+        container.innerHTML = products.map(renderProductCard).join('');
+        
+        container.querySelectorAll('.f').forEach(card => {
+            card.addEventListener('click', () => {
+                const productId = card.dataset.id;
+                window.location.href = `products.html?id=${productId}`;
+            });
         });
-    });
+    } catch (error) {
+        console.error('Error rendering product list:', error);
+        container.innerHTML = '<p style="color: white; text-align: center;">Ошибка загрузки товаров</p>';
+    }
 }
 
 export function renderProductDetails(product) {
@@ -69,53 +68,58 @@ export function renderProductDetails(product) {
 }
 
 export async function getProductById(id) {
-    const products = await loadProducts();
-    return products.find(p => p.id === parseInt(id));
+    try {
+        const response = await fetch(`${API_BASE}/products/${id}`);
+        if (!response.ok) throw new Error('Network error');
+        return await response.json();
+    } catch (error) {
+        console.error('Get product by id error:', error);
+        throw new Error('Ошибка загрузки товара');
+    }
 }
 
 export async function addProduct(productData) {
-    const products = await loadProducts();
-    const newProduct = {
-        id: products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1,
-        ...productData
-    };
-    
-    products.push(newProduct);
-    await saveProducts(products);
-    
-    await updateCatalogIfOpen();
-    
-    return { success: true, product: newProduct };
+    try {
+        const response = await fetch(`${API_BASE}/products`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(productData)
+        });
+        return await response.json();
+    } catch (error) {
+        console.error('Add product error:', error);
+        return { success: false, error: 'Ошибка соединения с сервером' };
+    }
 }
 
 export async function updateProduct(productId, productData) {
-    const products = await loadProducts();
-    const productIndex = products.findIndex(p => p.id === parseInt(productId));
-    if (productIndex === -1) {
-        return { success: false, error: 'Товар не найден' };
+    try {
+        const response = await fetch(`${API_BASE}/products/${productId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(productData)
+        });
+        return await response.json();
+    } catch (error) {
+        console.error('Update product error:', error);
+        return { success: false, error: 'Ошибка соединения с сервером' };
     }
-    
-    products[productIndex] = { ...products[productIndex], ...productData };
-    await saveProducts(products);
-    
-    await updateCatalogIfOpen();
-    
-    return { success: true, product: products[productIndex] };
 }
 
 export async function deleteProduct(productId) {
-    const products = await loadProducts();
-    const productIndex = products.findIndex(p => p.id === parseInt(productId));
-    if (productIndex === -1) {
-        return { success: false, error: 'Товар не найден' };
+    try {
+        const response = await fetch(`${API_BASE}/products/${productId}`, {
+            method: 'DELETE'
+        });
+        return await response.json();
+    } catch (error) {
+        console.error('Delete product error:', error);
+        return { success: false, error: 'Ошибка соединения с сервером' };
     }
-    
-    products.splice(productIndex, 1);
-    await saveProducts(products);
-    
-    await updateCatalogIfOpen();
-    
-    return { success: true };
 }
 
 export async function updateCatalogIfOpen() {

@@ -2,10 +2,6 @@ import { renderProductList } from './products.js';
 import { loginUser, registerUser, logoutUser, getCurrentUser, isAdmin } from './auth.js';
 import { validateForm } from './validation.js';
 
-import { initializeUsers, initializeProducts } from './mockDB.js';
-initializeUsers();
-initializeProducts();
-
 document.addEventListener('DOMContentLoaded', async function() {
     const currentUser = getCurrentUser();
     updateHeader(currentUser);
@@ -32,14 +28,18 @@ document.addEventListener('DOMContentLoaded', async function() {
                 return;
             }
 
-            const result = await loginUser(login, password);
-            if (result.success) {
-                alert('Вход выполнен успешно!');
-                window.location.href = 'index.html';
-            } else {
-                alert(result.error);
-                console.log('Ошибка входа. Проверьте логин и пароль.');
-                passwordInput.value = '';
+            try {
+                const result = await loginUser(login, password);
+                if (result.success) {
+                    alert('Вход выполнен успешно!');
+                    window.location.href = 'index.html';
+                } else {
+                    alert(result.error);
+                    console.log('Ошибка входа. Проверьте логин и пароль.');
+                    passwordInput.value = '';
+                }
+            } catch (error) {
+                alert('Ошибка соединения с сервером');
             }
         });
     }
@@ -64,14 +64,18 @@ document.addEventListener('DOMContentLoaded', async function() {
                 return;
             }
 
-            const result = await registerUser(login, password, name);
-            if (result.success) {
-                alert('Регистрация выполнена успешно! Теперь вы можете войти в систему.');
-                window.location.href = 'login.html';
-            } else {
-                alert(result.error);
-                loginInput.value = '';
-                passwordInput.value = '';
+            try {
+                const result = await registerUser(login, password, name);
+                if (result.success) {
+                    alert('Регистрация выполнена успешно! Теперь вы можете войти в систему.');
+                    window.location.href = 'login.html';
+                } else {
+                    alert(result.error);
+                    loginInput.value = '';
+                    passwordInput.value = '';
+                }
+            } catch (error) {
+                alert('Ошибка соединения с сервером');
             }
         });
     }
@@ -90,17 +94,25 @@ document.addEventListener('DOMContentLoaded', async function() {
         const productId = urlParams.get('id');
         
         if (productId) {
-            const { getProductById, renderProductDetails } = await import('./products.js');
-            const product = await getProductById(productId);
-            const productContainer = document.querySelector('.product-details');
-            if (product && productContainer) {
-                productContainer.innerHTML = renderProductDetails(product);
-                
-                const buyButton = productContainer.querySelector('.buy-button');
-                if (buyButton) {
-                    buyButton.addEventListener('click', function() {
-                        alert('Товар добавлен в корзину!');
-                    });
+            try {
+                const { getProductById, renderProductDetails } = await import('./products.js');
+                const product = await getProductById(productId);
+                const productContainer = document.querySelector('.product-details');
+                if (product && productContainer) {
+                    productContainer.innerHTML = renderProductDetails(product);
+                    
+                    const buyButton = productContainer.querySelector('.buy-button');
+                    if (buyButton) {
+                        buyButton.addEventListener('click', function() {
+                            alert('Товар добавлен в корзину!');
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading product details:', error);
+                const productContainer = document.querySelector('.product-details');
+                if (productContainer) {
+                    productContainer.innerHTML = '<p style="color: white; text-align: center;">Ошибка загрузки товара</p>';
                 }
             }
         }

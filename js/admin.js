@@ -3,10 +3,6 @@ import { loadProducts, addProduct, updateProduct, deleteProduct } from './produc
 import { validateForm } from './validation.js';
 import { cloudStorage } from './cloudStorage.js';
 
-import { initializeUsers, initializeProducts } from './mockDB.js';
-initializeUsers();
-initializeProducts();
-
 document.addEventListener('DOMContentLoaded', function() {
     if (!isAdmin()) {
         alert('Доступ запрещен. Требуются права администратора.');

@@ -12,5 +12,12 @@
     "password": "password",
     "name": "Пользователь",
     "role": "user"
+  },
+  {
+    "id": 3,
+    "login": "kek",
+    "password": "123456",
+    "name": "lol",
+    "role": "user"
   }
 ]

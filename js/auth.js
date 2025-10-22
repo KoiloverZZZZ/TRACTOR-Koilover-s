@@ -1,43 +1,61 @@
-import { getUsers, saveUsers, getLocalUsers } from "./mockDB.js"
+const API_BASE = 'http://localhost:3000/api';
 
 export async function loginUser(login, password) {
-    const users = getLocalUsers();
-    console.log('Поиск пользователя:', login);
-    console.log('Все пользователи в localStorage:', users);
-    
-    const user = users.find(u => u.login === login && u.password === password);
-    if (user) {
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        return { success: true, user };
+    try {
+        const response = await fetch(`${API_BASE}/users`);
+        if (!response.ok) throw new Error('Network error');
+        
+        const users = await response.json();
+        const user = users.find(u => u.login === login && u.password === password);
+        
+        if (user) {
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            return { success: true, user };
+        }
+        return { success: false, error: 'Неверный логин или пароль' };
+    } catch (error) {
+        console.error('Login error:', error);
+        return { success: false, error: 'Ошибка соединения с сервером' };
     }
-    return { success: false, error: 'Неверный логин или пароль' };
 }
 
 export async function registerUser(login, password, name) {
-    const users = getLocalUsers();
-    console.log('Регистрация пользователя:', login);
-    console.log('Текущие пользователи:', users);
-    
-    if (users.find(u => u.login === login)) {
-        return { success: false, error: 'Пользователь с таким логином уже существует' };
+    try {
+        const response = await fetch(`${API_BASE}/users`);
+        if (!response.ok) throw new Error('Network error');
+        
+        const users = await response.json();
+        
+        if (users.find(u => u.login === login)) {
+            return { success: false, error: 'Пользователь с таким логином уже существует' };
+        }
+        
+        const newUser = { 
+            login, 
+            password, 
+            name, 
+            role: 'user' 
+        };
+        
+        const createResponse = await fetch(`${API_BASE}/users`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newUser)
+        });
+        
+        const result = await createResponse.json();
+        
+        if (result.success) {
+            return { success: true, user: result.user };
+        } else {
+            return { success: false, error: result.error || 'Ошибка регистрации' };
+        }
+    } catch (error) {
+        console.error('Registration error:', error);
+        return { success: false, error: 'Ошибка соединения с сервером' };
     }
-    
-    // Создаем нового пользователя
-    const newUser = { 
-        id: users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1, 
-        login, 
-        password, 
-        name, 
-        role: 'user' 
-    };
-    
-    // Добавляем пользователя в базу данных
-    users.push(newUser);
-    await saveUsers(users);
-    
-    console.log('Новый пользователь зарегистрирован:', newUser);
-    
-    return { success: true, user: newUser };
 }
 
 export function logoutUser() {
@@ -55,56 +73,56 @@ export function isAdmin() {
 }
 
 export async function getAllUsers() {
-    return getLocalUsers();
+    try {
+        const response = await fetch(`${API_BASE}/users`);
+        if (!response.ok) throw new Error('Network error');
+        return await response.json();
+    } catch (error) {
+        console.error('Get users error:', error);
+        throw new Error('Ошибка загрузки пользователей');
+    }
 }
 
 export async function addUser(userData) {
-    const users = getLocalUsers();
-    if (users.find(u => u.login === userData.login)) {
-        return { success: false, error: 'Пользователь с таким логином уже существует' };
+    try {
+        const response = await fetch(`${API_BASE}/users`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData)
+        });
+        return await response.json();
+    } catch (error) {
+        console.error('Add user error:', error);
+        return { success: false, error: 'Ошибка соединения с сервером' };
     }
-    
-    const newUser = {
-        id: users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1,
-        ...userData
-    };
-    
-    users.push(newUser);
-    await saveUsers(users);
-    return { success: true, user: newUser };
 }
 
 export async function updateUser(userId, userData) {
-    const users = getLocalUsers();
-    const userIndex = users.findIndex(u => u.id === parseInt(userId));
-    if (userIndex === -1) {
-        return { success: false, error: 'Пользователь не найден' };
+    try {
+        const response = await fetch(`${API_BASE}/users/${userId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData)
+        });
+        return await response.json();
+    } catch (error) {
+        console.error('Update user error:', error);
+        return { success: false, error: 'Ошибка соединения с сервером' };
     }
-    
-    // Проверяем, не занят ли логин другим пользователем
-    const existingUser = users.find(u => u.login === userData.login && u.id !== parseInt(userId));
-    if (existingUser) {
-        return { success: false, error: 'Пользователь с таким логином уже существует' };
-    }
-    
-    users[userIndex] = { ...users[userIndex], ...userData };
-    await saveUsers(users);
-    return { success: true, user: users[userIndex] };
 }
 
 export async function deleteUser(userId) {
-    const users = getLocalUsers();
-    const userIndex = users.findIndex(u => u.id === parseInt(userId));
-    if (userIndex === -1) {
-        return { success: false, error: 'Пользователь не найден' };
+    try {
+        const response = await fetch(`${API_BASE}/users/${userId}`, {
+            method: 'DELETE'
+        });
+        return await response.json();
+    } catch (error) {
+        console.error('Delete user error:', error);
+        return { success: false, error: 'Ошибка соединения с сервером' };
     }
-    
-    const currentUser = getCurrentUser();
-    if (currentUser && currentUser.id === parseInt(userId)) {
-        return { success: false, error: 'Нельзя удалить самого себя' };
-    }
-    
-    users.splice(userIndex, 1);
-    await saveUsers(users);
-    return { success: true };
 }
