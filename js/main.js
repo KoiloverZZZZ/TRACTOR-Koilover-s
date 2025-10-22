@@ -119,7 +119,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 });
 
-// Обработчик для обновления каталога при возвращении на главную
 window.addEventListener('pageshow', function(event) {
     if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
         const catalogContainer = document.querySelector('.ob');

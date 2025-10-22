@@ -6,16 +6,13 @@ const cors = require('cors');
 const app = express();
 const PORT = 3000;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.static('.'));
 
-// Пути к файлам данных
 const USERS_FILE = path.join(__dirname, 'data', 'users.json');
 const PRODUCTS_FILE = path.join(__dirname, 'data', 'products.json');
 
-// Создаем папку data если её нет
 async function ensureDataDirectory() {
     try {
         await fs.mkdir(path.join(__dirname, 'data'), { recursive: true });
@@ -25,7 +22,6 @@ async function ensureDataDirectory() {
     }
 }
 
-// Вспомогательные функции для работы с файлами
 async function readJSONFile(filePath) {
     try {
         const data = await fs.readFile(filePath, 'utf8');
@@ -50,7 +46,6 @@ async function writeJSONFile(filePath, data) {
 async function initializeData() {
     await ensureDataDirectory();
     
-    // Проверяем и создаем users.json если его нет
     try {
         await fs.access(USERS_FILE);
         console.log('users.json exists');
@@ -75,7 +70,6 @@ async function initializeData() {
         console.log('Created default users.json');
     }
     
-    // Проверяем и создаем products.json если его нет
     try {
         await fs.access(PRODUCTS_FILE);
         console.log('products.json exists');
@@ -207,7 +201,6 @@ async function initializeData() {
     }
 }
 
-// API Routes для пользователей
 app.get('/api/users', async (req, res) => {
     try {
         const users = await readJSONFile(USERS_FILE);
@@ -280,7 +273,6 @@ app.delete('/api/users/:id', async (req, res) => {
     }
 });
 
-// API Routes для товаров
 app.get('/api/products', async (req, res) => {
     try {
         const products = await readJSONFile(PRODUCTS_FILE);
@@ -369,7 +361,6 @@ app.delete('/api/products/:id', async (req, res) => {
     }
 });
 
-// Статические файлы
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
