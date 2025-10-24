@@ -4,7 +4,7 @@ const path = require('path');
 const cors = require('cors');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
@@ -361,6 +361,7 @@ app.delete('/api/products/:id', async (req, res) => {
     }
 });
 
+// Serve HTML files
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
@@ -381,13 +382,21 @@ app.get('/products.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'products.html'));
 });
 
+// Handle SPA routing - serve index.html for all other routes
+app.get('*', (req, res) => {
+    if (req.path.startsWith('/api/')) {
+        return res.status(404).json({ error: 'API endpoint not found' });
+    }
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 // Запуск сервера
 initializeData().then(() => {
     app.listen(PORT, () => {
         console.log('=================================');
         console.log('🚗 TRACTOR Wheels Store Server');
         console.log('=================================');
-        console.log(`Server is running on http://localhost:${PORT}`);
+        console.log(`Server is running on port ${PORT}`);
         console.log('');
         console.log('📊 API endpoints:');
         console.log('  GET    /api/users');
