@@ -35,6 +35,7 @@ async function readJSONFile(filePath) {
 async function writeJSONFile(filePath, data) {
     try {
         await fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf8');
+        console.log(`Successfully wrote to ${filePath}`);
         return true;
     } catch (error) {
         console.error(`Error writing file ${filePath}:`, error);
@@ -201,6 +202,7 @@ async function initializeData() {
     }
 }
 
+// USERS API
 app.get('/api/users', async (req, res) => {
     try {
         const users = await readJSONFile(USERS_FILE);
@@ -219,12 +221,14 @@ app.post('/api/users', async (req, res) => {
         };
         users.push(newUser);
         
-        if (await writeJSONFile(USERS_FILE, users)) {
+        const writeSuccess = await writeJSONFile(USERS_FILE, users);
+        if (writeSuccess) {
             res.json({ success: true, user: newUser });
         } else {
-            res.status(500).json({ error: 'Failed to save user' });
+            res.status(500).json({ error: 'Failed to save user to file' });
         }
     } catch (error) {
+        console.error('Error creating user:', error);
         res.status(500).json({ error: 'Failed to create user' });
     }
 });
@@ -241,12 +245,14 @@ app.put('/api/users/:id', async (req, res) => {
         
         users[userIndex] = { ...users[userIndex], ...req.body };
         
-        if (await writeJSONFile(USERS_FILE, users)) {
+        const writeSuccess = await writeJSONFile(USERS_FILE, users);
+        if (writeSuccess) {
             res.json({ success: true, user: users[userIndex] });
         } else {
-            res.status(500).json({ error: 'Failed to update user' });
+            res.status(500).json({ error: 'Failed to update user in file' });
         }
     } catch (error) {
+        console.error('Error updating user:', error);
         res.status(500).json({ error: 'Failed to update user' });
     }
 });
@@ -263,16 +269,19 @@ app.delete('/api/users/:id', async (req, res) => {
         
         users.splice(userIndex, 1);
         
-        if (await writeJSONFile(USERS_FILE, users)) {
+        const writeSuccess = await writeJSONFile(USERS_FILE, users);
+        if (writeSuccess) {
             res.json({ success: true });
         } else {
-            res.status(500).json({ error: 'Failed to delete user' });
+            res.status(500).json({ error: 'Failed to delete user from file' });
         }
     } catch (error) {
+        console.error('Error deleting user:', error);
         res.status(500).json({ error: 'Failed to delete user' });
     }
 });
 
+// PRODUCTS API
 app.get('/api/products', async (req, res) => {
     try {
         const products = await readJSONFile(PRODUCTS_FILE);
@@ -307,12 +316,14 @@ app.post('/api/products', async (req, res) => {
         };
         products.push(newProduct);
         
-        if (await writeJSONFile(PRODUCTS_FILE, products)) {
+        const writeSuccess = await writeJSONFile(PRODUCTS_FILE, products);
+        if (writeSuccess) {
             res.json({ success: true, product: newProduct });
         } else {
-            res.status(500).json({ error: 'Failed to save product' });
+            res.status(500).json({ error: 'Failed to save product to file' });
         }
     } catch (error) {
+        console.error('Error creating product:', error);
         res.status(500).json({ error: 'Failed to create product' });
     }
 });
@@ -329,12 +340,14 @@ app.put('/api/products/:id', async (req, res) => {
         
         products[productIndex] = { ...products[productIndex], ...req.body };
         
-        if (await writeJSONFile(PRODUCTS_FILE, products)) {
+        const writeSuccess = await writeJSONFile(PRODUCTS_FILE, products);
+        if (writeSuccess) {
             res.json({ success: true, product: products[productIndex] });
         } else {
-            res.status(500).json({ error: 'Failed to update product' });
+            res.status(500).json({ error: 'Failed to update product in file' });
         }
     } catch (error) {
+        console.error('Error updating product:', error);
         res.status(500).json({ error: 'Failed to update product' });
     }
 });
@@ -351,12 +364,14 @@ app.delete('/api/products/:id', async (req, res) => {
         
         products.splice(productIndex, 1);
         
-        if (await writeJSONFile(PRODUCTS_FILE, products)) {
+        const writeSuccess = await writeJSONFile(PRODUCTS_FILE, products);
+        if (writeSuccess) {
             res.json({ success: true });
         } else {
-            res.status(500).json({ error: 'Failed to delete product' });
+            res.status(500).json({ error: 'Failed to delete product from file' });
         }
     } catch (error) {
+        console.error('Error deleting product:', error);
         res.status(500).json({ error: 'Failed to delete product' });
     }
 });
@@ -382,7 +397,7 @@ app.get('/products.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'products.html'));
 });
 
-// Handle SPA routing - serve index.html for all other routes
+// Handle SPA routing
 app.get('*', (req, res) => {
     if (req.path.startsWith('/api/')) {
         return res.status(404).json({ error: 'API endpoint not found' });
@@ -408,6 +423,9 @@ initializeData().then(() => {
         console.log('  POST   /api/products');
         console.log('  PUT    /api/products/:id');
         console.log('  DELETE /api/products/:id');
+        console.log('');
+        console.log('💾 Data persistence: ENABLED');
+        console.log('  Changes are saved to JSON files');
         console.log('');
         console.log('🔑 Default admin login:');
         console.log('  Login: admin');
