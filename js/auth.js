@@ -21,6 +21,7 @@ export async function loginUser(login, password) {
 
 export async function registerUser(login, password, name) {
     try {
+        // Сначала проверяем существующих пользователей
         const response = await fetch(`${API_BASE}/users`);
         if (!response.ok) throw new Error('Network error');
         
@@ -30,6 +31,7 @@ export async function registerUser(login, password, name) {
             return { success: false, error: 'Пользователь с таким логином уже существует' };
         }
         
+        // Создаем нового пользователя
         const newUser = { 
             login, 
             password, 
